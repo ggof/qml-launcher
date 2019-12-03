@@ -17,10 +17,9 @@ struct AppInfo {
     QString exec;
 };
 
-QVariantList apps() {
+QVariantList apps(QDir dir) {
     QVariantList apps;
 
-    QDir dir("/usr/share/applications");
     foreach (auto fn, dir.entryList(QStringList() << "*.desktop", QDir::Files)) {
        // qDebug() << "Reading" << dir.filePath(fn);
         QFile file(dir.filePath(fn));
@@ -81,9 +80,17 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
 
+    QVariantList appList;
+
+    QDir rootDir("/usr/share/applications");
+    QDir userDir(QDir::homePath() + "/.local/share/applications");
+
+    appList.append(apps(rootDir));
+    appList.append(apps(userDir));
+
     QQmlApplicationEngine engine;
     engine.addImageProvider("icons", new ImageProvider());
-    engine.rootContext()->setContextProperty("apps", apps());
+    engine.rootContext()->setContextProperty("apps", appList);
     engine.rootContext()->setContextProperty("proc", new Process(&engine));
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
