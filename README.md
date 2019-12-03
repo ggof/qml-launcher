@@ -2,6 +2,9 @@
 
 Simple fullscreen launcher for desktop applications
 
+## Differences with the original
+I have forked this project because it was missing the user-specific path.
+
 ![pic](https://user-images.githubusercontent.com/5585454/29671459-4659d418-88f2-11e7-8d0d-f03bc4f51023.png)
 
 To install, you need to have Qt framework installed. In the project directory, run commands:
